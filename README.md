@@ -1,1 +1,1 @@
-# wce-devops
+# WCE DevOps Project
