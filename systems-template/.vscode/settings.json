@@ -1,0 +1,6 @@
+{
+  "cmake.useCMakePresets": "always",
+  "cmake.generator": null,
+  "cmake.buildDirectory": null,
+  "cmake.configureSettings": {}
+}

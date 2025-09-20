@@ -1,24 +1,26 @@
 cmake_minimum_required(VERSION 3.16)
+project(prog C)          # declare the language
+
 set(CMAKE_C_STANDARD 99)
 
-project(prog)
-
-if (!LINUX)
-    message(FATAL_ERROR "Linux is required to successfully execute \
-                         the required syscalls for CS3411 assignments")
+# This check was wrong syntax; use NOT, and check the system properly.
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  message(FATAL_ERROR "Linux is required to successfully execute the required syscalls for CS3411 assignments")
 endif()
 
-if(DEFINED TEST)
-    set(MAIN_C test/rktest.c)
+# Prefer an option() so it's obvious and type-safe
+option(TEST "Build test flavor" OFF)
+
+if (TEST)  # option() gives a proper boolean
+  set(MAIN_C test/rktest.c)
 else()
-    set(MAIN_C src/main.c)
+  set(MAIN_C src/main.c)
 endif()
 
 add_executable(prog ${MAIN_C})
 
-if(DEFINED TEST)
-    target_link_libraries(prog m)
+if (TEST)
+  target_link_libraries(prog PRIVATE m)
 endif()
 
-target_include_directories(prog PUBLIC test src
-)
+target_include_directories(prog PUBLIC test src)
