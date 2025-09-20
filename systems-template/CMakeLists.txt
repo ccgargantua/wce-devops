@@ -11,13 +11,14 @@ endif()
 # Prefer an option() so it's obvious and type-safe
 option(TEST "Build test flavor" OFF)
 
+set(SOURCE src/example_compilation_unit.c)
+
 if (TEST)  # option() gives a proper boolean
-  set(MAIN_C test/rktest.c)
+  add_executable(prog test/rktest.c ${SOURCE})
 else()
-  set(MAIN_C src/main.c)
+  add_executable(prog src/main.c ${SOURCE})
 endif()
 
-add_executable(prog ${MAIN_C})
 
 if (TEST)
   target_link_libraries(prog PRIVATE m)
