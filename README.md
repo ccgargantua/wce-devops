@@ -12,10 +12,16 @@ The objective of the WCE DevOps team is to create implement an efficient, robust
 - User-friendly Remote Development
 - User-friendly Containerized Development
 
-## Keep Up with the Projet
+## Keep Up with the Project
 
-We are in the process of licensing recordings of our meetings to be uploaded to YouTube, and setting up a mailing list.
+For now, keep track this GitHub page or [the WCE YouTube channel](https://www.youtube.com/watch?v=8LjYp-lTtjc) for updates. In the future, we plan to setup a mailing list and blog.
 
 ## "I Want to Contribute"
 
-**We are not currently accepting contributions from outside of the team**, but this is likely to change with the development of contribution guidelines. Please check back later
+### MTU Students
+
+if you are an MTU student, reach out to professor Kit Cischke via email using your school email address.
+
+### Everyone else
+
+**We are not currently accepting contributions from outside of the team**, but this is likely to change with the development of contribution guidelines. Please check back later :)
