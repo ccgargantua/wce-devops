@@ -24,7 +24,8 @@ This document is a work in progress as the scope of the project is still in deve
 
 ## Overview
 
-WCE-Devops aims to develop and implement a Continuous Integration/Continuous Deployment (CI/CD) pipeline with reusable programming templates for courses within the College of Computing. More information regarding templates and build system can be found [here](./templates.md).
+Our contribution philosophy aims to provide a simple method of collaborating on code that is both intuitive and thorough. For that reason, we will not be re-inventing the wheel, but integrating the existing Trunk-Based Development strategy. **For a large, detailed collection of documentation on T-BD, look [here](https://trunkbaseddevelopment.com/)**. This document will detail the most important aspects of the strategy as it relates to WCE DevOps open source and proprietary code bases.
+
 
 ## Versioning
 
