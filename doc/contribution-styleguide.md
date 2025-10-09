@@ -1,11 +1,4 @@
-# Contribution Styleguide
-```
-Author:   Carter Dugan
-          CarterDugan@asei.com
-Created:  9/26/2025
-Modified: 10/8/2025
-```
-
+# Contribution Style Guide
 
 ## Table of Contents
 
@@ -26,12 +19,12 @@ Modified: 10/8/2025
 
 ## Disclaimer
 
-This document is a work in progress. If you are unfamiliar with Git, you should at least consult the [quickstart](./quickstart.md) guide and the [additional resources](./README.md/#additional-resources) highlighted in the [README](./README.md).
+This document is a work in progress as the scope of the project is still in development. If you are unfamiliar with Git, or this project as a whole, you should consider referencing our [README](./README.md).
 
 
 ## Overview
 
-Our contribution philosphy aims to provide a simple method of collarboarting on code that is both intuitive and thorough. For that reason, we will not be re-inventing the wheel, but integrating the existing Trunk-Based Development strategy. **For a large, detailed collection of documentation on T-BD, look [here](https://trunkbaseddevelopment.com/)**. This document will detail the most important aspects of the strategy as it relates to American Sound's open source and proprietary code bases.
+WCE-Devops aims to develop and implement a Continuous Integration/Continuous Deployment (CI/CD) pipeline with reusable programming templates for courses within the College of Computing. More information regarding templates and build system can be found [here](./templates.md).
 
 ## Versioning
 
@@ -43,7 +36,7 @@ Versions are tracked in the following format: `vMAJOR.MINOR.PATCH`. For example,
 
 Branches should be classified into the following categories:
 
-* `feature` branches consist of code for new features. Typically, a project would have several features added as minor updates before a desired state is reached for a release. So, several `vMAJOR.MINOR+1.PATCH`s before a `vMAJOR+1.MINOR.PATCH`
+* `feature` branches consist of code for new features or new templates added. Typically, a project would have several features added as minor updates before a desired state is reached for a release. So, several `vMAJOR.MINOR+1.PATCH`s before a `vMAJOR+1.MINOR.PATCH`
 
 * `bugfix` branches should branch from the *most recent* commit in `main`. This is for low-priority bugs.
 
@@ -54,7 +47,7 @@ Branches should be classified into the following categories:
 
 When creating a branch, the branch name should be prefixed with the classification in the style of `<classification>/<branchname>`. Branch names should be brief but descriptive. Here are some examples:
 
-* `feature/xyz-device-driver-support`
+* `feature/generic-python-template`
 * `feature/front-page-ui-overhaul`
 * `bugfix/database-negative-db-index-edgecase`
 * `bugfix/rare-crash-from-invalid-ui-resolution`
@@ -70,28 +63,28 @@ To synchronize a branch with `main`/`master`, we rebase. This gives us a more li
 
 ### Conflict Resolution
 
-Before opening your PR, your branch should be synchronized with `main`/`master`. See [Synchronization details](#synchronization). If there are conflicts during a PR, the rule of thumb for which changes should be merged depend on what code is the "proper" code. If you are applying a more broad `bugfix` to a bug that is addressed in a separate `hotfix`, odds are that you will want to keep all the necessary changes for your `bugfix` and scrap the conflicting `hotfix` changes. If your `feature` uses a temporary ad-hoc solution to a problem that has been fixed from some other merge to `main`/`master`, odds are you will want your wider `feature` to make use of the more robust and proper solution that has since been added to `main` since you started your work.
+Before opening your PR, your branch should be synchronized with `main`/`master`. If there are conflicts during a PR, the rule of thumb for which changes should be merged depend on what code is the "proper" code. If you are applying a more broad `bugfix` to a bug that is addressed in a separate `hotfix`, odds are that you will want to keep all the necessary changes for your `bugfix` and scrap the conflicting `hotfix` changes. If your `feature` uses a temporary ad-hoc solution to a problem that has been fixed from some other merge to `main`/`master`, odds are you will want your wider `feature` to make use of the more robust and proper solution that has since been added to `main` since you started your work.
 
-If you aren't sure, reach out. In most cases, the solution should be straightforward, but definitely don't make a decision that you aren't sure about.
+If you aren't sure, reach out to other team members or Project Manager. In most cases, the solution should be straightforward, but definitely don't make a decision that you aren't sure about.
 
 ### Details
 
 * The **title** of a pull request should be a brief description in the style of a commit message, and give a broad description of all changes proposed in the PR.
-* The **description**, like the title, should be a broad description of all changes proposed in the PR, except much more verbose and in-depth. It is simply the big picture. You don't have to explain every line of code, every function, or even every file. In fact, I would argue that no code should be explicitly mentioned unless it is vital to understanding the change as a whole. Your title is your "What", your description is collectively your "What", "Why" and "How". **Please utilize markdown in your description.** One clever way to provide a sufficient description is to just copy essential big-picture details from any markdown docs you made, if any, into your description. Likely this would only be the case for a `feature/` branch.
+* The **description**, like the title, should be a broad description of all changes proposed in the PR, except much more verbose and in-depth. It is simply the big picture. You don't have to explain every line of code, every function, or even every file. In fact, I would argue that no code should be explicitly mentioned unless it is vital to the understanding of the change as a whole. Your title is your "What", your description is collectively your "What", "Why" and "How". **Please utilize markdown in your description.** One clever way to provide a sufficient description is to just copy essential big-picture details from any markdown docs you made, if any, into your description. Likely this would only be the case for a `feature/` branch.
 * **Tags** for now should just match your branch type prefix, i.e. `bugfix`, `hotfix`, or `feature`.
 
 ### Review Process 
 
-If you open a PR, you need to request a review before it can be merged. If you are an ASEI employee, that is probably me (Carter Dugan) as well as the relevant team lead.
+If you open a PR, you need to request a review before it can be merged. This should be another member of the team or Project Manager.
 
 Reviewers should ensure that:
 
 1. There are no merge conflicts.
 2. All tests (if any) and build pipelines pass.
-3. Code quality complies with ASEI and industry standards.
+3. Code quality complies with Michigan Tech guidelines.
 
 The reviewer should leave thorough comments when necessary to aid the programmer in completing a quality contribution. **The programmer should help the reviewer by being as proactive in performing the necessary due diligence before opening a pull request**. Not every commit needs to be perfect, and the PR code isn't expected to be perfect either. But an effort needs to be made to save everyone the additional time and energy during this process.
 
 ### Merge Strategy
 
-Upon mergin a PR, we should choose to squash the commits. That way, the final state of the code is what is on record for the entire commit. Whether this is the best choice for large feature merges is up for debate, so plese reach out if you think you have justification for an alternative strategy to squash + merge. **After merging, tag the merge commit according to the details in [versioning](#versioning)**.
+Upon merging a PR, we should choose to squash the commits. That way, the final state of the code is what is on record for the entire commit. Whether this is the best choice for large feature merges is up for debate, so please reach out if you think you have justification for an alternative strategy to squash + merge. **After merging, tag the merge commit according to the details in [versioning](#versioning)**.
