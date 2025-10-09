@@ -4,6 +4,8 @@ Monorepo for WCE DevOps team.
 
 ## Objective
 
+> *"Engineers are hired to solve a problem, and should not spend countless hours configuring their environment to solve said problem. Thus, environment configuration becomes a different problem for a different engineer to solve."*
+
 The objective of the WCE DevOps team is to create implement an efficient, robust, and extensible CI/CD pipeline and computer programming framework for students taking courses or building projects at Michigan Technological University. We are working hard to encourage experience with industry-standard tooling by creating programming templates complete with:
 
 - Automated Testing APIs
