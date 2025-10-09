@@ -22,8 +22,8 @@ For now, keep track this GitHub page or [the WCE YouTube channel](https://www.yo
 
 ### MTU Students
 
-if you are an MTU student, reach out to professor Kit Cischke via email using your school email address.
+if you are an MTU student and want hands-on experience with more in-depth work on this project, reach out to professor Kit Cischke via email using your school email address. You can also refer to the below bit :)
 
 ### Everyone else
 
-**We are not currently accepting contributions from outside of the team**, but this is likely to change with the development of contribution guidelines. Please check back later :)
+We accept contributions that address **open issues** on this GitHub page **tagged as "Help Wanted"**. If you open a PR that does not follow this simple requirement, **it will be denied**. Just open an issue of your own if there isn't one already :)
