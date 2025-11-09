@@ -1,0 +1,1 @@
+mvn -q exec:java -Dexec.mainClass="App"
