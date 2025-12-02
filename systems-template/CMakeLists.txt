@@ -1,24 +1,30 @@
 cmake_minimum_required(VERSION 3.16)
+project(program C)
+
 set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
-project(prog)
+include(CheckCCompilerFlag)
 
-if (!LINUX)
-    message(FATAL_ERROR "Linux is required to successfully execute \
-                         the required syscalls for CS3411 assignments")
-endif()
+option(build_tests "Build tests" OFF)
 
-if(DEFINED TEST)
-    set(MAIN_C test/rktest.c)
+if(MSVC)
+    add_compile_options(/W4 /WX)
 else()
-    set(MAIN_C src/main.c)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 endif()
 
-add_executable(prog ${MAIN_C})
-
-if(DEFINED TEST)
-    target_link_libraries(prog m)
-endif()
-
-target_include_directories(prog PUBLIC test src
+set(PROJECT_OBJ
+    src/example_compilation_unit.c
 )
+
+if (build_tests)
+    add_executable(test
+        tests/example_compilation_unit_tests.c
+        ${PROJECT_OBJ}
+    )
+    target_link_libraries(test PRIVATE rktest)
+else()
+    add_executable(program src/main.c ${PROJECT_OBJ})
+    target_link_libraries(program PRIVATE rktest)
+endif()
