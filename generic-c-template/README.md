@@ -4,8 +4,8 @@
 
 * [About](#about)
 * [Dependencies](#dependencies)
-    [Option 1: Out of the Box](#out-of-the-box)
-    [Option 2: Hands On](#hands-on)
+    * [Option 1: Out of the Box](#out-of-the-box)
+    * [Option 2: Hands On](#hands-on)
 
 ## About
 
@@ -21,7 +21,7 @@ We know it's a pain to install a bunch of dependencies. If you want a streamline
     * [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
     * [Container Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-containers)
 * [Docker](https://www.docker.com/) allows us to give you a precompiled list of dependencies and an environment configuration. It will install most, if not all of the tools that you need for your projects so that **you** don't have to.
-* [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) *or* [Git Bash]([Git Bash](https://gitforwindows.org/), which are Git clients for windows. Git is not necessarily *required* to use our templates, but it is very helpful. Our engineers use Linux, so we are more comfortable writing bash utilities and thus **require this for anyone using Windows**. Don't worry, the Bash shell is incredibly important to learn anyways ;)
+* [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) *or* [Git Bash](https://gitforwindows.org/), which are Git clients for windows. Git is not necessarily *required* to use our templates, but it is very helpful. Our engineers use Linux, so we are more comfortable writing bash utilities and thus **require this for anyone using Windows**. Don't worry, the Bash shell is incredibly important to learn anyways ;)
 
 ### Hands On
 
