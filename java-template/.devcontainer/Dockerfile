@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-# Install packages
+# Install base tools + Java + Maven
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gdb \
@@ -10,28 +10,34 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
     ca-certificates \
+    wget \
     apt-transport-https \
     software-properties-common \
     sudo \
     locales \
+    maven \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
- # Java + Maven devconatiner
- FROM mcr.microsoft.com/devcontainers/java:1-21-bullseye
+# Install Temurin JDK 21 (adoptium)
+RUN wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public \
+        | gpg --dearmor | tee /usr/share/keyrings/adoptium.gpg > /dev/null && \
+    echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] \
+        https://packages.adoptium.net/artifactory/deb stable main" \
+        > /etc/apt/sources.list.d/adoptium.list && \
+    apt-get update && apt-get install -y temurin-21-jdk
 
 # Locale
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 
-# Create vscode user with passwordless sudo
+# Create vscode user
 RUN useradd -m vscode -s /bin/bash \
     && echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Ensure build directory exists and is writable
 RUN mkdir -p /home/vscode/.build \
-    && chown -R vscode:vscode /home/vscode
+ && chown -R vscode:vscode /home/vscode
 
 USER vscode
 WORKDIR /workspaces
