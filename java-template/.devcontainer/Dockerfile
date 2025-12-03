@@ -1,6 +1,10 @@
-FROM ubuntu:24.04
+# Base image 
+FROM ubuntu:22.04
 
-# Install base tools + Java + Maven
+# Avoid interactive tzdata prompts
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install base tools + prerequisites
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gdb \
@@ -16,14 +20,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo \
     locales \
     maven \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Temurin JDK 21 (adoptium)
+# Install Temurin JDK 21 (Adoptium)
 RUN wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public \
-        | gpg --dearmor | tee /usr/share/keyrings/adoptium.gpg > /dev/null && \
+        | gpg --dearmor > /usr/share/keyrings/adoptium.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] \
-        https://packages.adoptium.net/artifactory/deb stable main" \
+        https://packages.adoptium.net/artifactory/deb jammy main" \
         > /etc/apt/sources.list.d/adoptium.list && \
     apt-get update && apt-get install -y temurin-21-jdk
 
