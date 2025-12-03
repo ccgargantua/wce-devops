@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
+ # Java + Maven devconatiner
+ FROM mcr.microsoft.com/devcontainers/java:1-21-bullseye
+
 # Locale
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
