@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Debug (program)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/home/vscode/.build/debug/program",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb"
+    },
+    {
+      "name": "Run Release (program)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/home/vscode/.build/release/program",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb"
+    },
+    {
+      "name": "Run Tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/home/vscode/.build/test/test",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb"
+    }
+  ]
+}
