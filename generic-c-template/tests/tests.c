@@ -1,4 +1,4 @@
-#include "../src/example_compilation_unit.h"
+#include "../src/vector.h"
 
 #include <rktest/rktest.h>
 
