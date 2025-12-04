@@ -1,6 +1,10 @@
 #include <stdio.h>
 
+#include "vector.h"
+
 int main()
 {
-	printf("hello, world\n");
+	Vector2i v1, v2;
+	
+	// TODO
 }

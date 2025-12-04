@@ -14,12 +14,12 @@ endif()
 add_subdirectory(lib)
 
 set(PROJECT_OBJ
-    src/example_compilation_unit.c
+    src/vector.c
 )
 
 if (build_tests)
     add_executable(test
-        tests/example_compilation_unit_tests.c
+        tests/tests.c
         ${PROJECT_OBJ}
     )
     target_link_libraries(test PRIVATE rktest)
