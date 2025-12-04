@@ -1,0 +1,19 @@
+{
+    "name": "Java Dev Container",
+
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
+    },
+
+    "remoteUser": "vscode",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "ms-vscode.cpptools"
+            ]
+        }
+    }
+}

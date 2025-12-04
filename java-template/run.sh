@@ -1,1 +1,2 @@
-mvn -q exec:java -Dexec.mainClass="App"
+#!/bin/bash
+mvn exec:java -Dexec.mainClass=app.App
