@@ -130,11 +130,42 @@ Save the file. **Note** if you are on Linux and you get a permissions error when
 sudo chmod -R a+rwX /path/to/your/project/folder/
 ```
 
+To run the debug build, you must first select the configuraiton by navigating to the CMake panel and selecting `debug` under "configure". Your target should be `program`.
+
+![](doc/img/5.png)
+
+Then, navigate to the Run pane and press the green "Play" button to compile and then run your software.
+
+![](doc/img/6.png)
+
+
 ### Release Builds
 
+Follow the steps for the debug build, but select the `release` configuration instead. Make sure your target is still `program` in the CMake pane.
 
+If you run the release build, notice that the debug print does not execute ;) You can test this with an `#else` directive.
+
+```c
+#include <stdio.h>
+
+int main()
+{
+	printf("hello, world\n");
+    
+    // add this
+    #ifndef NDEBUG
+    printf("This is some debug code.\n");
+    #else
+    printf("But this isn't!\n");
+    #endif
+    // end of added section
+}
+```
 
 ### Test Builds
 
+Follow the same steps as debug and release builds, but select the `test` configuration **and select the `test` target**.
 
+![](doc/img/7.png)
 
+When you run the tests, you'll notice that, by default, a single passing test runs. See [Adding Tests](#adding-tests) to learn how to add your own tests.
