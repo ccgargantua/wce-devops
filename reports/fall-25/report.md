@@ -15,7 +15,7 @@
 * [Collaboration](#collaboration)
     * [Open Source](#open-source)
     * [Version Control](#version-control)
-* [Build of Materials](#bill-of-materials)
+* [Bill of Materials](#bill-of-materials)
 
 ## Definitions
 
@@ -84,10 +84,114 @@ Dependencies cannot be reduced to zero. At the end of the day, students will sti
 
 Docker allows us to provide pre-defined `Dockerfile`s to users. These configuration files contain information about the target platform (typically Linux) and any project-specific dependencies. The latter allows us to offload the responsibility of installing required software to an automated container-building process provided by Docker. Compilers, runtimes, debuggers, libraries, anything necessary for a "Hello, world!" or any other baseline behavior, already provided by simply running Docker on our templates with the provided `Dockerfile`.
 
+```docker
+FROM alpine
+CMD ["echo","hello"]
+```
+*Figure 1: A minimal `Dockerfile` sample*
+
 To further optimize the workflow, the templates leverage VSCode project structure and the required extensions to provide students with even more autonomy. VSCode parses directories as "projects", and reserves the `.vscode/` directory for project configuration. In this directory, the team specifies `settings.json` with VSCode project settings, `launch.json` with build and run specifications, and `extensions.json` for VSCode extension requirements (such as linters, language tasks, etc.). These files are parsed by VSCode when you launch the editor, and allow for a snapshot of project to be used as a "ground zero". From there, users are free to install additional extensions, change settings, and modify launch tasks at will without needing to worry about the base requirements.
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug (active CMake target)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "CMake: build"
+    }
+  ]
+}
+```
+*Figure 2: A minimal `launch.json` sample configured for CMake*
 
 The `Container Tools` and `Remote Development` extensions of which manual installation is required provide users with a seemless cross-platform development setup. Much like VSCode itself, they reserve a Unix-style hidden directory called `.devcontainer` that allows for multiple configuration files to be made. One of the two currently deployed by the DevOps team is the `devcontainer.json` file, which creates environment variables that are passed along to the Docker container. These envrionement variables are vital, and construct a "picture" of the project structure that is passed along to the Docker container in the form of a development workspace. This includes file access permissions, user metadata, and the container's pre-launch instructions.
 
+```json
+{
+    "name": "Systems Dev Container",
+
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+
+    "remoteUser": "vscode",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-extension-pack",
+                "matepek.vscode-catch2-test-adapter",
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "cmake.useCMakePresets": "always",
+                "cmake.configureOnOpen": false
+            }
+        }
+    }
+}
+```
+*Figure 3: The `.vscode/devcontainer.json` for the C programming template.*
+
 The second configuration file, and perhaps the most alien to users, would be the `Dockerfile` itself. The Dockerfile specifies the target platform and, optionally, the target architecture. This is all the necessary information required to build the container. From there, dependencies are installed via the "native" process. In the case of Linux and the DevOps team's needs, this is the package manager of the relevant system. This is where the magic happens, and our team is effectively able to hide dependency management from the inexperienced and overwhelmed. If a user wishes to install a dependency themselves, they can simply add a line to the installer list. This strikes a perfect balance between abstraction and control, as a user can choose which they want depending on the usecase.
 
+```Dockerfile
+# Install packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gdb \
+    valgrind \
+    cmake \
+    ninja-build \
+    clang,
+    clangd,
+    clang-tidy,
+    curl \
+    git \
+    ca-certificates \
+    apt-transport-https \
+    software-properties-common \
+    sudo \
+    locales \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+```
+*Figure 4: Dependency management in the `Dockerfile` used in the C programming template.*
+
+With these universal dependencies, we introduce a universal **code editor**, provide a portable option of writing code for a **target platform**, and eliminate the majority of **dependency management** overhead. All of this is done without restricting the user in a way that a platform-specific IDE would, providing ambitious and curious users with exciting customization options.
+
 ### The C Software Template
+
+The C software template utilizes the universal dependencies heavily, but the most powerful utility would be the CMake build system. The WCE DevOps team constructed a CMake configuration that aids users in managing third-party libraries, creates distinct compilation and run profiles on launch, and of course handles the compilation process of the user's source code.
+
+![](./img/template-topology.png)
+*Figure 5: A very basic overview of the build-system-oriented topology used by the templates.*
+
+The template provides users with some additional utilities, such as VSCode extensions for debugging and configuration for those extensions. Using our templates, users are able to place break points and step through code line by line with `gdb`. However, a promising feature of the template is build configuration. Leveraging CMake, users can switch between different build profiles. The three pre-existing build profiles can be found in `CMakePresets.json`, and profiles can be added on the fly with ease. These preset profiles pass CMake options to the actual build information in `CMakeLists.txt`, which will configure compilation flags or even build targets based on said information. The three default presets are `Release`, `Debug`, and `Test` builds. Each can be easily selected and ran within two (2) clicks or a single VSCode command.
+
+`Release` and `Debug` builds both build an app executable. The difference between the two is in the compiler definitions and flags. `Release` maximizes standardized optimizations (`-O2`), enforces erroneous compiler warnings, and defines a `NDEBUG` macro, a standardized macro used for conditional compilation of debug code. `Debug` disabled optimizations, generates debug symbols in the source code, softens compiler warnings and does *not* define the `NDEBUG` macro. These configurations very much mirror what the user would see in the real world, but also allows students to leave as much debug code as they want into the code. They simply have to enclose it in `#ifdef \\ #endif`.
+
+```c
+#ifndef NDEBUG
+printf("The value of x at this point is %d\n", x);
+#endif
+```
+
+Since the debug preset allows the user to neglect warnings, they can finish their implementation before building under release to review warnings and fix them after completing the assignment. This allows them to focus on a more refined product *just before* submitting the assignment.
+
+![](img/presets.png)
+*Figure 6: Users can easily switch between presets with just two clicks or a single command.*
+
+The `Test` preset is more unique and resolves the **testing methodology** issue. Whereas the Java template utilizes a testing framework pre-packaged into the build system, the C template elects to use a third party library called *rktest*. Under the hood, the `Test` preset is a wrapper for either a debug *or* release preset with an important difference: it does not build an app, but instead builds a `tests` binary using the `rktest.c` source file provided by the API, as well as any test files inside of `tests/`. Users can utilize the well-documented API to write their own tests in source files placed in the `tests/` directory, and then run the tests using the `Test` preset.
+
+If the user wishes to include additional libraries, CMake provides many options. The easiest way to do so is to leverage our template and the CMake `submodules()` function. If a user has a library that builds with CMake, they can simply drop the entire root into our `lib/` directory. From there, the `lib/CMakeLists.txt` will include the library for you without any additional steps. After all of this, building, testing, and packing libraries into C software is easier than ever before.
+
