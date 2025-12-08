@@ -1,4 +1,4 @@
-# WCE DevOps Team Fall 2025 Final Report
+# WCE DevOps Fall 2025 Final Report
 
 ## Table of Contents
 
@@ -195,3 +195,6 @@ The `Test` preset is more unique and resolves the **testing methodology** issue.
 
 If the user wishes to include additional libraries, CMake provides many options. The easiest way to do so is to leverage our template and the CMake `submodules()` function. If a user has a library that builds with CMake, they can simply drop the entire root into our `lib/` directory. From there, the `lib/CMakeLists.txt` will include the library for you without any additional steps. After all of this, building, testing, and packing libraries into C software is easier than ever before.
 
+### The Java Software Template
+
+Java, like C, is one of the two primary languages used by MTU in the Computing Science cirriculum.
