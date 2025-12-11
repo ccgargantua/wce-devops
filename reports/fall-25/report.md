@@ -11,11 +11,11 @@
     * [An Overview of Templates](#an-overview-of-templates)
     * [Universal Dependencies](#universal-dependencies)
     * [The C Software Template](#the-c-software-template)
-    * [The Java Software Template](#the-java-software-template)
+    * [Other Software Templates](#other-software-templates)
 * [Collaboration](#collaboration)
-    * [Open Source](#open-source)
-    * [Version Control](#version-control)
-* [Bill of Materials](#bill-of-materials)
+    * [Open Sourcing and Contribution Philosophy](#open-sourcing-and-contribution-philosophy)
+    * [Mailing List](#mailing-list)
+* [Utilized Technologies](#utilized-technologies)
 
 ## Definitions
 
@@ -88,6 +88,7 @@ Docker allows us to provide pre-defined `Dockerfile`s to users. These configurat
 FROM alpine
 CMD ["echo","hello"]
 ```
+
 *Figure 1: A minimal `Dockerfile` sample*
 
 To further optimize the workflow, the templates leverage VSCode project structure and the required extensions to provide students with even more autonomy. VSCode parses directories as "projects", and reserves the `.vscode/` directory for project configuration. In this directory, the team specifies `settings.json` with VSCode project settings, `launch.json` with build and run specifications, and `extensions.json` for VSCode extension requirements (such as linters, language tasks, etc.). These files are parsed by VSCode when you launch the editor, and allow for a snapshot of project to be used as a "ground zero". From there, users are free to install additional extensions, change settings, and modify launch tasks at will without needing to worry about the base requirements.
@@ -109,6 +110,7 @@ To further optimize the workflow, the templates leverage VSCode project structur
   ]
 }
 ```
+
 *Figure 2: A minimal `launch.json` sample configured for CMake*
 
 The `Container Tools` and `Remote Development` extensions of which manual installation is required provide users with a seemless cross-platform development setup. Much like VSCode itself, they reserve a Unix-style hidden directory called `.devcontainer` that allows for multiple configuration files to be made. One of the two currently deployed by the DevOps team is the `devcontainer.json` file, which creates environment variables that are passed along to the Docker container. These envrionement variables are vital, and construct a "picture" of the project structure that is passed along to the Docker container in the form of a development workspace. This includes file access permissions, user metadata, and the container's pre-launch instructions.
@@ -140,6 +142,7 @@ The `Container Tools` and `Remote Development` extensions of which manual instal
     }
 }
 ```
+
 *Figure 3: The `.vscode/devcontainer.json` for the C programming template.*
 
 The second configuration file, and perhaps the most alien to users, would be the `Dockerfile` itself. The Dockerfile specifies the target platform and, optionally, the target architecture. This is all the necessary information required to build the container. From there, dependencies are installed via the "native" process. In the case of Linux and the DevOps team's needs, this is the package manager of the relevant system. This is where the magic happens, and our team is effectively able to hide dependency management from the inexperienced and overwhelmed. If a user wishes to install a dependency themselves, they can simply add a line to the installer list. This strikes a perfect balance between abstraction and control, as a user can choose which they want depending on the usecase.
@@ -165,6 +168,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 ```
+
 *Figure 4: Dependency management in the `Dockerfile` used in the C programming template.*
 
 With these universal dependencies, we introduce a universal **code editor**, provide a portable option of writing code for a **target platform**, and eliminate the majority of **dependency management** overhead. All of this is done without restricting the user in a way that a platform-specific IDE would, providing ambitious and curious users with exciting customization options.
@@ -174,6 +178,7 @@ With these universal dependencies, we introduce a universal **code editor**, pro
 The C software template utilizes the universal dependencies heavily, but the most powerful utility would be the CMake build system. The WCE DevOps team constructed a CMake configuration that aids users in managing third-party libraries, creates distinct compilation and run profiles on launch, and of course handles the compilation process of the user's source code.
 
 ![](./img/template-topology.png)
+
 *Figure 5: A very basic overview of the build-system-oriented topology used by the templates.*
 
 The template provides users with some additional utilities, such as VSCode extensions for debugging and configuration for those extensions. Using our templates, users are able to place break points and step through code line by line with `gdb`. However, a promising feature of the template is build configuration. Leveraging CMake, users can switch between different build profiles. The three pre-existing build profiles can be found in `CMakePresets.json`, and profiles can be added on the fly with ease. These preset profiles pass CMake options to the actual build information in `CMakeLists.txt`, which will configure compilation flags or even build targets based on said information. The three default presets are `Release`, `Debug`, and `Test` builds. Each can be easily selected and ran within two (2) clicks or a single VSCode command.
@@ -189,12 +194,34 @@ printf("The value of x at this point is %d\n", x);
 Since the debug preset allows the user to neglect warnings, they can finish their implementation before building under release to review warnings and fix them after completing the assignment. This allows them to focus on a more refined product *just before* submitting the assignment.
 
 ![](img/presets.png)
+
 *Figure 6: Users can easily switch between presets with just two clicks or a single command.*
 
 The `Test` preset is more unique and resolves the **testing methodology** issue. Whereas the Java template utilizes a testing framework pre-packaged into the build system, the C template elects to use a third party library called *rktest*. Under the hood, the `Test` preset is a wrapper for either a debug *or* release preset with an important difference: it does not build an app, but instead builds a `tests` binary using the `rktest.c` source file provided by the API, as well as any test files inside of `tests/`. Users can utilize the well-documented API to write their own tests in source files placed in the `tests/` directory, and then run the tests using the `Test` preset.
 
 If the user wishes to include additional libraries, CMake provides many options. The easiest way to do so is to leverage our template and the CMake `submodules()` function. If a user has a library that builds with CMake, they can simply drop the entire root into our `lib/` directory. From there, the `lib/CMakeLists.txt` will include the library for you without any additional steps. After all of this, building, testing, and packing libraries into C software is easier than ever before.
 
-### The Java Software Template
+### Other Software Templates
 
-Java, like C, is one of the two primary languages used by MTU in the Computing Science cirriculum.
+In addition to the C programming template, there are additional programming templates. One of which, the Java template, is a deployable state. While many of the principles remain the same, the differences in build system, extensions, and dependencies are what make the adapter layer of Docker and VSCode so helpful. For example, the Java template makes use of a much more abstracted build system called *Maven*, which which provides automatic project setup and configuration of Debug, Release, and Test builds. Due to the overcomplicated nature of Java projects, our Maven-generated project was heavily modified to cooperate with VSCode to run natively within the editor.
+
+In addition to these completed template, there are multiple work-in-progress templates. This includes a C++ template, an embedded C template, and a Python Machine Learning template. Each exist in separate branches and are exposed in the GitHub, making them prime opportunities for teams to build off of in the future.
+
+### Collaboration
+
+#### Open Sourcing and Contribution Philosophy
+
+Our goal was to create a collaborative environment that minimized confusion, preserved code quality, and encouraged meaningful participation from both internal team members and the wider community. Our strategy was centered around Trunk-Based Development, a development model that prioritized the use of a Continuous Integration/Continuous Delivery (CI/CD) pipeline to streamline the software development process. The central “trunk” or main branch would be continuously updated to allow for expansion and organization of the project. This development process was chosen because it aligns with our need for rapid iteration while keeping the project's history clean and understandable for future users. By using a standardized versioning format, we created a predictable method for keeping track of the team’s progress over time. We categorized branches into feature, bugfix, and hotfix. This allowed our team to communicate intent to the rest of the team through naming conventions, reducing ambiguity. When these were added to the main branch, we required a rebase before merging to keep our repository clean as well as a submission of a pull request (PR) so another member could approve of the merge.
+
+We decided to make the project open source as it was a main part of our contribution philosophy. By doing this we allowed fellow students and professors to view and interact with the code base which in turn expanded our pool of collaborators beyond our team. This gave us more templates to work on and help from other perspectives and skill levels. On the other hand, the community gained access to a transparent educational resource that demonstrated industry-standard workflows like PR reviews, merge strategies, conflict resolution, and structured documentation. Students would be able to learn by doing and professors could create templates for their classes and homework assignments respectively.
+
+Our philosophy of continuous improvement and delivery was reinforced by making this project open source. This helped to increase the likelihood of long-term sustainability. As projects usually struggle to survive the transition between semesters, this project was aimed at ensuring progress was visible, and easily continued by future contributors. The formal review process supported this continuity by creating a historical record of how and why changes were made. This strategy helped to ensure that the final state remained understandable even with many separate contributors iterating on their branches. By designing our collaboration model around clarity, accessibility, and university involvement, we increased the odds that our project will remain functionable and maintainable for future students. The contribution philosophy documented here reflects our intent to build not only a working codebase but also a sustainable ecosystem for future developers and the longevity of the project.
+
+#### Mailing List
+
+As this project relies on the people we develop for, we have a need for a mailing list to send out updates on the project. We used two tools to create this mailing list: Listmonk and Hostinger. 
+	Listmonk is an open-source software that allows you to create and manage multiple mailing lists from one central account. It is hosted using the web service provider Hostinger on a VPS. Hostinger came with a free domain that everything runs through, “wce-devops.cloud” which I then made a subdomain “mail.wce-devops.cloud” for everything to run through. Currently, if you visit the website, you’ll be greeted by a login screen that allows you to log in to the admin panel of Listmonk or go to the page that allows you to subscribe to the currently available mailing lists.
+	The main struggle while trying to get Listmonk to work was the lack of web hosting knowledge, and just trying to get everything to the point where you could access the website from any computer. That has been the biggest time sink of this part of the project, but everything is, currently, working as intended.
+	The future of this part of the project is to alter the layout of the website to make it more oriented towards the user and to get a few mailing lists set up and provided to those who would like to sign up for them.
+
+
